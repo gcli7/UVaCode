@@ -8,7 +8,6 @@ int main(int argc, char **argv) {
 
 	string input = "", temp = "";
 	stringstream ss;
-	bool flag = true;
 
 	while(getline(cin, input)) {
 		ss.str("");
