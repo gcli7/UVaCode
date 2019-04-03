@@ -1,2 +1,0 @@
-# UVaCode
-my UVa code
