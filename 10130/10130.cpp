@@ -12,38 +12,43 @@ static const int io_setting = []() {
   return 0;
 }();
 
+typedef struct {
+  int price;
+  int weight;
+} Object;
+
 int main() {
   int cases;
   std::cin >> cases;
   while (cases--) {
-    int object_size, price[OBJECT_SIZE_LIMIT], weight[OBJECT_SIZE_LIMIT];
+    int object_size;
+    Object objects[OBJECT_SIZE_LIMIT];
     int person_size, load[PERSON_SIZE_LIMIT], max_load = 0;
-    int dp[OBJECT_SIZE_LIMIT][LOAD_LIMIT];
+    int value[LOAD_LIMIT];
     int sum = 0;
 
     std::cin >> object_size;
     for (int i = 0; i < object_size; ++i) {
-      std::cin >> price[i] >> weight[i];
+      std::cin >> objects[i].price >> objects[i].weight;
     }
     std::cin >> person_size;
     for (int i = 0; i < person_size; ++i) {
       std::cin >> load[i];
       max_load = std::max(max_load, load[i]);
     }
-    memset(dp, 0, sizeof(dp));
+    memset(value, 0, sizeof(value));
 
     for (int i = 0; i < object_size; ++i) {
-      for (int j = 0; j <= max_load; ++j) {
-        if (j < weight[i]) {
-          dp[i+1][j] = dp[i][j];
-        } else {
-          dp[i+1][j] = std::max(dp[i][j], dp[i][j - weight[i]] + price[i]);
+      for (int j = max_load; j >= 0; --j) {
+        if (j >= objects[i].weight) {
+          value[j] = std::max(value[j],
+                              value[j - objects[i].weight] + objects[i].price);
         }
       }
     }
 
     for (int i = 0; i < person_size; ++i) {
-      sum += dp[object_size][load[i]];
+      sum += value[load[i]];
     }
     std::cout << sum << "\n";
   }
